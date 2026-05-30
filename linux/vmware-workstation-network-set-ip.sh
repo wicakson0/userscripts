@@ -22,7 +22,7 @@ log() {
 # Configure IPv4
 #----------------------------------------------------------------------------------
 nmcli connection modify "$CONN" \
-    ipv4.method dhcp \
+    ipv4.method manual \
     ipv4.addresses "$IP_ADDR" \
     ipv4.gateway "$DEFAULT_GATEWAY" \
     ipv4.dns "$DEFAULT_DNS"
