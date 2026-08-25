@@ -60,6 +60,7 @@ log "Installing OpenSSH server..."
 
 sudo apt-get update
 sudo apt-get install -y openssh-server
+sudo ssh-keygen -A
 
 log "Configuring SSH..."
 
