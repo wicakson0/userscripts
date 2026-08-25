@@ -15,10 +15,15 @@ INTERFACE="$1"
 IP_ADDR="$2"
 
 NETPLAN_FILE="/etc/netplan/99-custom-network.yaml"
+SSH_CONFIG_FILE="/etc/ssh/sshd_config.d/99-custom.conf"
 
 log() {
     echo "[INFO] $1"
 }
+
+# ------------------------------------------------------------------------------
+# Configure Network
+# ------------------------------------------------------------------------------
 
 log "Configuring interface '$INTERFACE'..."
 
@@ -46,3 +51,28 @@ sudo netplan generate
 sudo netplan apply
 
 log "Network configuration applied successfully"
+
+# ------------------------------------------------------------------------------
+# Configure SSH
+# ------------------------------------------------------------------------------
+
+log "Installing OpenSSH server..."
+
+sudo apt-get update
+sudo apt-get install -y openssh-server
+
+log "Configuring SSH..."
+
+sudo tee "$SSH_CONFIG_FILE" > /dev/null <<EOF
+PasswordAuthentication yes
+PermitRootLogin yes
+EOF
+
+# Validate SSH configuration before restarting
+sudo sshd -t
+
+sudo systemctl enable --now ssh
+sudo systemctl restart ssh
+
+log "SSH configured successfully"
+log "Root password authentication is enabled"
